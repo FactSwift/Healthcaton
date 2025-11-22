@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Data BPJS - Capture Selfie Kamera</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Menggunakan font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8;
+        }
+        .container-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        /* Style untuk tombol verifikasi pada main view */
+        .verification-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 140px;
+            padding: 1rem;
+            background-color: #07408d;
+            color: white;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            width: 100%;
+        }
+        .verification-button:hover {
+            background-color: #003882;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 4, 6, 0.1);
+        }
+        .verification-icon {
+            margin-bottom: 0.5rem;
+            stroke-width: 2.5;
+        }
+
+        /* Menyembunyikan input file secara visual */
+        .hidden-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Video element untuk kamera */
+        #camera-feed {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 0.5rem;
+            transform: scaleX(-1); /* Membalik secara horizontal seperti selfie */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            object-fit: cover; /* Memastikan video mengisi ruang yang tersedia */
+        }
+        
+        /* Modal Styling */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Overlay gelap */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 1rem;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease-out;
+        }
+        /* Style untuk modal hasil verifikasi */
+        .result-icon {
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            padding: 1rem;
+        }
+        .result-icon.success {
+            background-color: #d1e7dd; /* Light green background */
+            color: #0f5132; /* Dark green icon */
+        }
+        .result-icon.failed {
+            background-color: #f8d7da; /* Light red background */
+            color: #842029; /* Dark red icon */
+        }
+        .result-icon.loading {
+            background-color: #cfe2ff;
+            color: #084298;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Container Utama Aplikasi -->
+    <div class="w-full max-w-4xl bg-white p-8 md:p-12 rounded-xl container-shadow border border-gray-200">
+        
+        <!-- Header Universal -->
+        <header id="app-header" class="flex justify-between items-center mb-10">
+            <div class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40/00824b/ffffff?text=BPJS" alt="BPJS Logo" class="w-10 h-10 object-cover rounded-md" />
+                <div class="flex flex-col text-sm leading-tight">
+                    <span class="font-bold text-lg text-green-700">BPJS Kesehatan</span>
+                    <span class="text-xs text-gray-500">Badan Penyelenggara Jaminan Sosial</span>
+                </div>
+            </div>
+            <!-- Tombol Kembali (akan diubah berdasarkan view) -->
+            <button id="back-button" class="flex items-center bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-150">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Kembali
+            </button>
+        </header>
+
+        <!-- Div untuk Tampilan 1: Utama (Tombol Aksi) -->
+        <div id="main-view" class="view">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-center mb-12" style="color: #00824b;">
+                Verifikasi Data Peserta
+            </h1>
+
+            <!-- Input File Tersembunyi (Untuk "Unggah KTP" di Main View) -->
+            <input type="file" id="ktp-upload-main" accept="image/*,.pdf" class="hidden-input" />
+
+            <!-- Grid Tombol Aksi Verifikasi -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+                <!-- Tombol 1: Unggah KTP -->
+                <label for="ktp-upload-main" class="verification-button">
+                    <i data-lucide="upload-cloud" class="verification-icon w-8 h-8"></i>
+                    <span>Unggah KTP</span>
+                </label>
+
+                <!-- Tombol 2: Unggah Selfie (Memicu View Kamera Capture) -->
+                <button id="selfie-capture-button" class="verification-button">
+                    <i data-lucide="camera" class="verification-icon w-8 h-8"></i>
+                    <span>Ambil Foto Selfie</span>
+                </button>
+
+                <!-- Tombol 3: Verifikasi & Input Hasil (Memicu perbandingan & konfirmasi sistem) -->
+                <button id="verification-input-button" class="verification-button">
+                    <i data-lucide="user-check" class="verification-icon w-8 h-8"></i>
+                    <span>Verifikasi & Input Hasil</span>
+                </button>
+            </div>
+
+            <!-- Area Status File Unggahan KTP -->
+            <div id="file-feedback-ktp" class="mt-8 hidden p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-center font-medium">
+                <!-- Nama file KTP akan ditampilkan di sini -->
+            </div>
+            <!-- Area Status File Unggahan Selfie -->
+            <div id="file-feedback-selfie" class="mt-4 hidden p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-center font-medium">
+                <!-- Status Selfie akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Div untuk Tampilan 2: Camera Capture Selfie (Baru) -->
+        <div id="camera-capture-view" class="view hidden">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">
+                Ambil Foto Selfie
+            </h1>
+            <p class="text-gray-500 mb-10">
+                Pastikan wajah terlihat jelas di dalam bingkai kamera.
+            </p>
+
+            <div class="flex flex-col items-center justify-center space-y-8">
+                <!-- Video feed dari kamera -->
+                <video id="camera-feed" autoplay playsinline class="rounded-lg shadow-xl border-4 border-gray-300"></video>
+                
+                <!-- Canvas untuk mengambil gambar -->
+                <canvas id="camera-canvas" class="hidden"></canvas>
+                
+                <button id="capture-selfie-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition duration-150 shadow-md hover:shadow-lg">
+                    Ambil Foto
+                </button>
+            </div>
+
+            <div id="camera-status" class="mt-6 text-center text-red-600 font-medium"></div>
+        </div>
+
+        <!-- Div untuk Tampilan 3: Verifikasi Perbandingan Wajah -->
+        <div id="match-view" class="view hidden">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">
+                Verifikasi Wajah (Face Matching)
+            </h1>
+            <p class="text-gray-500 mb-10">
+                Perbandingan wajah akan dilakukan antara KTP dan Selfie yang telah diunggah.
+            </p>
+
+            <div class="space-y-8">
+                
+                <!-- 1. Info KTP dan Selfie yang Diunggah -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-xs font-semibold text-blue-800 mb-1">KTP Referensi:</p>
+                        <p id="ktp-ref-name" class="text-sm text-blue-700 truncate font-medium">Belum diunggah.</p>
+                    </div>
+                    <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                        <p class="text-xs font-semibold text-purple-800 mb-1">Selfie Diunggah:</p>
+                        <p id="selfie-ref-name" class="text-sm text-purple-700 truncate font-medium">Belum di-capture.</p>
+                    </div>
+                </div>
+
+                <!-- Hasil Verifikasi (Simulasi) -->
+                <div id="match-result" class="hidden p-4 rounded-lg text-center font-bold"></div>
+
+                <!-- Tombol Aksi -->
+                <div class="pt-6 flex justify-end space-x-4 border-t border-gray-200">
+                    <button type="button" id="start-verification-button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-150">
+                        Mulai Verifikasi
+                    </button>
+                    <!-- Tombol Konfirmasi Sistem (Hanya aktif setelah verif sukses) -->
+                    <button type="button" id="confirm-system-input" class="bg-green-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-150 opacity-50 cursor-not-allowed" disabled>
+                        Konfirmasi ke Sistem
+                    </button>
+                </div>
+            </div>
+            
+            <div id="match-status-warning" class="mt-6 hidden p-4 bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-lg text-center font-medium">
+                Mohon unggah KTP dan ambil Foto Selfie terlebih dahulu di menu utama.
+            </div>
+        </div>
+        
+        <!-- Modal 1: Konfirmasi Input Hasil ke Sistem -->
+        <div id="system-input-modal" class="modal hidden">
+            <div class="modal-content container-shadow">
+                <div class="px-6 py-8 md:px-10 border-b border-gray-200">
+                    <h2 class="text-2xl font-extrabold text-gray-900">
+                        Konfirmasi Input Data
+                    </h2>
+                    <p class="text-gray-600 mt-2">
+                        Yakin ingin menginput hasil verifikasi ini ke sistem?
+                    </p>
+                </div>
+                <div class="p-6 md:p-10">
+                    <p class="text-sm text-gray-500 mb-6">
+                        Pastikan perbandingan wajah telah berhasil.
+                    </p>
+                </div>
+                <div class="flex justify-end space-x-4 p-6 bg-gray-50 border-t border-gray-200">
+                    <button id="modal-cancel-button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-8 rounded-lg transition duration-150">
+                        Batal
+                    </button>
+                    <button id="modal-continue-button" class="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-8 rounded-lg transition duration-150">
+                        Konfirmasi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal 2: Hasil Verifikasi (Berhasil/Gagal) -->
+        <div id="result-modal" class="modal hidden">
+            <div class="modal-content container-shadow text-center">
+                
+                <div id="result-modal-icon" class="result-icon success w-20 h-20 mx-auto mt-10">
+                    <i data-lucide="check-circle" class="w-full h-full"></i>
+                </div>
+
+                <div class="px-6 py-4 md:px-10">
+                    <h2 id="result-modal-title" class="text-3xl font-extrabold text-gray-900 mb-3">
+                        Verifikasi Berhasil!
+                    </h2>
+                    <p id="result-modal-message" class="text-gray-600 mb-8">
+                        Data telah diverifikasi dan siap diinput.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-gray-50 border-t border-gray-200">
+                    <button id="result-modal-close-button" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-150 w-full">
+                        Selesai
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- Script untuk Logika Aplikasi -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inisialisasi Lucide icons
+            lucide.createIcons();
+
+            // Elemen Navigasi & Views
+            const mainView = document.getElementById('main-view');
+            const cameraCaptureView = document.getElementById('camera-capture-view'); // View baru untuk capture selfie
+            const matchView = document.getElementById('match-view'); 
+            
+            // Elemen Tombol & Input
+            const ktpUploadMain = document.getElementById('ktp-upload-main');
+            const selfieCaptureButton = document.getElementById('selfie-capture-button');
+            const verificationInputButton = document.getElementById('verification-input-button');
+            const backButton = document.getElementById('back-button');
+            const startVerificationButton = document.getElementById('start-verification-button'); 
+            const confirmSystemInput = document.getElementById('confirm-system-input');
+            const captureSelfieButton = document.getElementById('capture-selfie-button'); // Tombol Ambil Foto di view kamera
+
+            // Elemen Kamera
+            const cameraFeed = document.getElementById('camera-feed');
+            const cameraCanvas = document.getElementById('camera-canvas');
+            const cameraStatus = document.getElementById('camera-status');
+
+            // Elemen Feedback
+            const fileFeedbackKtp = document.getElementById('file-feedback-ktp');
+            const fileFeedbackSelfie = document.getElementById('file-feedback-selfie');
+            const ktpRefName = document.getElementById('ktp-ref-name');
+            const selfieRefName = document.getElementById('selfie-ref-name');
+            const matchResult = document.getElementById('match-result');
+            const matchStatusWarning = document.getElementById('match-status-warning');
+            
+            // Elemen Modal
+            const systemInputModal = document.getElementById('system-input-modal');
+            const modalCancelButton = document.getElementById('modal-cancel-button');
+            const modalContinueButton = document.getElementById('modal-continue-button');
+            const resultModal = document.getElementById('result-modal');
+            const resultModalIcon = document.getElementById('result-modal-icon');
+            const resultModalTitle = document.getElementById('result-modal-title');
+            const resultModalMessage = document.getElementById('result-modal-message');
+            const resultModalCloseButton = document.getElementById('result-modal-close-button');
+
+            // State Aplikasi
+            let currentStream = null; 
+            let uploadedKtpFile = null; 
+            let capturedSelfieFile = null; // Menyimpan File object dari selfie yang di-capture
+            let isProcessingMatch = false; 
+            let isMatchSuccessful = false;
+            let resultModalMode = 'final'; // 'final' (konfirmasi sistem) atau 'capture' (konfirmasi selfie)
+
+            
+            // --- Fungsi Navigasi Tampilan ---
+            function stopCamera() {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => {
+                        track.stop();
+                    });
+                    currentStream = null;
+                    cameraFeed.srcObject = null;
+                }
+            }
+
+            async function startCamera() {
+                cameraStatus.textContent = 'Memulai kamera...';
+                try {
+                    // Gunakan 'user' (kamera depan/selfie)
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'user' }, 
+                        audio: false 
+                    });
+                    currentStream = stream;
+                    cameraFeed.srcObject = stream;
+                    cameraStatus.textContent = 'Kamera aktif. Posisikan wajah Anda.';
+                    cameraFeed.play();
+                    captureSelfieButton.disabled = false; // Aktifkan tombol
+                } catch (err) {
+                    console.error("Gagal mengakses kamera: ", err);
+                    cameraStatus.textContent = `Error: Gagal mengakses kamera. (${err.name}). Fitur ini memerlukan izin kamera.`;
+                    captureSelfieButton.disabled = true; // Non-aktifkan tombol jika gagal
+                }
+            }
+
+            function showView(viewId) {
+                // Sembunyikan semua views & matikan kamera jika tidak di camera-capture-view
+                mainView.classList.add('hidden');
+                cameraCaptureView.classList.add('hidden');
+                matchView.classList.add('hidden');
+                
+                if (viewId !== 'camera-capture') {
+                    stopCamera();
+                }
+                
+                let backButtonText = 'Kembali';
+
+                if (viewId === 'main') {
+                    mainView.classList.remove('hidden');
+                } else if (viewId === 'camera-capture') {
+                    cameraCaptureView.classList.remove('hidden');
+                    startCamera(); 
+                    backButtonText = 'Batal'; 
+                } else if (viewId === 'match') {
+                    // Reset Match view state sebelum tampil
+                    isMatchSuccessful = false;
+                    matchResult.classList.add('hidden');
+                    confirmSystemInput.disabled = true;
+                    confirmSystemInput.classList.add('opacity-50', 'cursor-not-allowed');
+
+                    // Cek kelengkapan file sebelum menampilkan
+                    if (!uploadedKtpFile || !capturedSelfieFile) {
+                        matchStatusWarning.classList.remove('hidden');
+                        startVerificationButton.disabled = true;
+                        startVerificationButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        matchStatusWarning.classList.add('hidden');
+                        startVerificationButton.disabled = false;
+                        startVerificationButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+
+                    matchView.classList.remove('hidden');
+                    backButtonText = 'Batal'; 
+                    ktpRefName.textContent = uploadedKtpFile ? uploadedKtpFile.name : 'Belum diunggah.';
+                    selfieRefName.textContent = capturedSelfieFile ? 'Foto Selfie berhasil diambil.' : 'Belum di-capture.';
+                }
+
+                backButton.innerHTML = `<i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> ${backButtonText}`;
+                // Re-create icons for the back button
+                lucide.createIcons(); 
+            }
+
+            // --- Logika Modal ---
+            function showSystemInputModal() { systemInputModal.classList.remove('hidden'); }
+            function hideSystemInputModal() { systemInputModal.classList.add('hidden'); }
+
+            function showResultModal(success, title, message, mode = 'final') {
+                resultModalMode = mode; // Set mode: 'final' atau 'capture'
+
+                if (success) {
+                    resultModalIcon.innerHTML = `<i data-lucide="check-circle" class="w-full h-full"></i>`;
+                    resultModalIcon.className = 'result-icon success w-20 h-20 mx-auto mt-10';
+                    resultModalCloseButton.className = 'bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-150 w-full';
+                } else {
+                    resultModalIcon.innerHTML = `<i data-lucide="x-circle" class="w-full h-full"></i>`;
+                    resultModalIcon.className = 'result-icon failed w-20 h-20 mx-auto mt-10';
+                    resultModalCloseButton.className = 'bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-150 w-full';
+                }
+                
+                resultModalTitle.textContent = title;
+                resultModalMessage.textContent = message;
+                resultModal.classList.remove('hidden');
+                // Re-create icons inside the modal
+                lucide.createIcons(); 
+            }
+            
+            // --- Logika Pengambilan Foto Selfie ---
+            function handleCaptureSelfie() {
+                if (!currentStream) {
+                    cameraStatus.textContent = 'Kamera tidak aktif atau gagal diakses.';
+                    return;
+                }
+
+                const video = cameraFeed;
+                const canvas = cameraCanvas;
+                
+                // Set canvas dimension to video dimension
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Flip image to match selfie view (Horizontal flip)
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+                
+                // Draw video frame to canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Convert canvas image to Blob/File object
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        // Create a File object from the Blob
+                        capturedSelfieFile = new File([blob], `selfie_${new Date().getTime()}.png`, { type: 'image/png' });
+                        
+                        // Update status di main view
+                        fileFeedbackSelfie.textContent = `Foto Selfie berhasil diambil dan siap diverifikasi.`;
+                        fileFeedbackSelfie.classList.remove('hidden');
+
+                        // Tampilkan modal konfirmasi capture (Mode 'capture')
+                        showResultModal(true, 'Selfie Berhasil Diambil!', 'Foto wajah telah berhasil di-capture dan disimpan sebagai referensi.', 'capture');
+
+                    } else {
+                        cameraStatus.textContent = 'Gagal membuat file gambar dari kamera.';
+                    }
+                }, 'image/png');
+            }
+
+
+            // --- Logika Verifikasi Otomatis (Face Matching) ---
+
+            function runFaceMatchVerification() {
+                // Gunakan uploadedKtpFile dan capturedSelfieFile
+                if (isProcessingMatch || !uploadedKtpFile || !capturedSelfieFile) return; 
+
+                isProcessingMatch = true;
+                startVerificationButton.disabled = true;
+                startVerificationButton.classList.add('opacity-50', 'cursor-not-allowed');
+                confirmSystemInput.disabled = true;
+                confirmSystemInput.classList.add('opacity-50', 'cursor-not-allowed');
+                isMatchSuccessful = false;
+
+                // Tampilkan status memproses
+                matchResult.classList.remove('hidden');
+                // Menggunakan class result-icon.loading untuk animasi spin
+                matchResult.innerHTML = '<i data-lucide="loader-circle" class="w-6 h-6 mr-2 inline-block result-icon loading" style="animation: spin 1s linear infinite;"></i> Memproses verifikasi perbandingan wajah...';
+                matchResult.className = 'p-4 rounded-lg text-center font-bold bg-blue-100 text-blue-800 flex items-center justify-center';
+                lucide.createIcons();
+
+                // Simulasikan penundaan 3 detik
+                setTimeout(() => {
+                    // Simulasi hasil: 70% chance of success
+                    const matchScore = Math.random(); 
+                    
+                    if (matchScore > 0.3) { // 70% success rate simulation
+                        isMatchSuccessful = true;
+                        matchResult.innerHTML = '<i data-lucide="check-circle" class="w-6 h-6 mr-2 inline-block"></i> Verifikasi Berhasil! Wajah cocok.';
+                        matchResult.className = 'p-4 rounded-lg text-center font-bold bg-green-100 text-green-800 flex items-center justify-center';
+                        
+                        // Aktifkan tombol konfirmasi sistem jika berhasil
+                        confirmSystemInput.disabled = false;
+                        confirmSystemInput.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                    } else {
+                        isMatchSuccessful = false;
+                        matchResult.innerHTML = '<i data-lucide="x-circle" class="w-6 h-6 mr-2 inline-block"></i> Verifikasi Gagal! Wajah tidak cocok dengan KTP. Mohon ambil ulang Selfie.';
+                        matchResult.className = 'p-4 rounded-lg text-center font-bold bg-red-100 text-red-800 flex items-center justify-center';
+                        
+                        // Pastikan tombol konfirmasi sistem tetap non-aktif jika gagal
+                        confirmSystemInput.disabled = true;
+                        confirmSystemInput.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                    
+                    isProcessingMatch = false;
+                    startVerificationButton.disabled = false;
+                    startVerificationButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    lucide.createIcons();
+
+                }, 3000); // Penundaan 3 detik untuk simulasi proses
+            }
+
+            // --- Fungsi Handler Unggah KTP ---
+            function handleKtpUpload(inputElement) {
+                uploadedKtpFile = inputElement.files[0];
+                if (uploadedKtpFile) {
+                    fileFeedbackKtp.textContent = `File KTP berhasil diunggah: ${uploadedKtpFile.name}`;
+                    fileFeedbackKtp.classList.remove('hidden');
+                } else {
+                    fileFeedbackKtp.classList.add('hidden');
+                }
+            }
+            
+            // --- Event Listeners Aksi Utama ---
+
+            // Aksi 1: Unggah KTP
+            ktpUploadMain.addEventListener('change', () => { handleKtpUpload(ktpUploadMain); });
+
+            // Aksi 2: Tombol Ambil Foto Selfie (Memicu View Kamera Capture)
+            selfieCaptureButton.addEventListener('click', () => { showView('camera-capture'); });
+
+            // Aksi 3: Tombol Ambil Foto (Di View Kamera)
+            captureSelfieButton.addEventListener('click', handleCaptureSelfie);
+
+            // Aksi 4: Tombol Verifikasi & Input Hasil (Memicu View Match)
+            verificationInputButton.addEventListener('click', () => { 
+                showView('match'); 
+            });
+
+            // Aksi 5: Tombol MULAI Verifikasi di Match View
+            startVerificationButton.addEventListener('click', runFaceMatchVerification);
+
+            // Aksi 6: Tombol Konfirmasi ke Sistem (Setelah Face Match Berhasil)
+            confirmSystemInput.addEventListener('click', () => {
+                if (!confirmSystemInput.disabled && isMatchSuccessful) {
+                    showSystemInputModal(); // Tampilkan modal konfirmasi akhir
+                }
+            });
+
+            // Aksi 7: Tombol Kembali/Batal Universal
+            backButton.addEventListener('click', () => { 
+                // Jika sedang di view kamera, kembali ke main view dan matikan kamera
+                if (!cameraCaptureView.classList.contains('hidden') || !matchView.classList.contains('hidden')) {
+                    showView('main');
+                }
+            });
+
+            
+            // --- Event Listeners Modal Konfirmasi Sistem ---
+            modalCancelButton.addEventListener('click', hideSystemInputModal);
+
+            modalContinueButton.addEventListener('click', () => {
+                hideSystemInputModal();
+                // Tampilkan modal hasil konfirmasi akhir (Mode 'final')
+                showResultModal(true, 'Input Berhasil!', 'Hasil verifikasi berhasil diinput ke sistem.', 'final');
+            });
+
+            // --- Event Listener Modal Hasil Verifikasi/Capture ---
+            resultModalCloseButton.addEventListener('click', () => {
+                resultModal.classList.add('hidden');
+                
+                if (resultModalMode === 'final') {
+                    // Hanya reset files dan state jika ini adalah konfirmasi input sistem akhir
+                    uploadedKtpFile = null;
+                    capturedSelfieFile = null;
+                    fileFeedbackKtp.classList.add('hidden');
+                    fileFeedbackSelfie.classList.add('hidden');
+                }
+                
+                // Selalu kembali ke main view
+                showView('main'); 
+            });
+
+
+            // Tampilkan tampilan utama saat aplikasi dimuat
+            showView('main');
+        });
+    </script>
+</body>
+</html>

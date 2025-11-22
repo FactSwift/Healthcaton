@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan - Data Peserta BPJS Kesehatan</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Menggunakan font Inter dan Montserrat sebagai standar */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Montserrat:wght@700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8; /* Background luar halaman */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Area Header dengan latar putih dan shadow */
+        .top-header {
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+            z-index: 20;
+        }
+
+        /* Dropdown/Ikon ID di kanan atas */
+        .dropdown-id {
+            background-color: #07408d; /* Warna biru gelap BPJS */
+        }
+        
+        /* Gaya navigasi sidebar aktif (Verifikasi) */
+        .sidebar-item.active {
+            background-color: #f0f3f8; /* Warna latar belakang abu-abu muda */
+            border-right: 4px solid #07408d; /* Garis biru sebagai indikator aktif */
+            font-weight: 700;
+            color: #1f2937; /* text-gray-800 */
+        }
+
+        /* Gaya navigasi sidebar non-aktif */
+        .sidebar-item:not(.active) {
+            border-right: 4px solid transparent;
+        }
+
+        /* Gaya tombol Verifikasi di konten utama */
+        .btn-verifikasi {
+            background-color: #07408d;
+            transition: background-color 0.3s ease;
+        }
+        .btn-verifikasi:hover {
+            background-color: #003882;
+        }
+        
+        /* Gaya untuk Dropdown Layanan */
+        .service-dropdown {
+            top: 100%; /* Tempatkan di bawah header */
+            left: 0;
+            min-width: 200px;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f3f8]">
+
+    <!-- --- 1. Header Tetap (Top Bar) --- -->
+    <header class="top-header fixed top-0 left-0 w-full bg-white flex items-center justify-between px-10 h-[64px]">
+        <!-- Logo BPJS Kesehatan -->
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40/003882/ffffff?text=BPJS" alt="BPJS Logo" class="w-10 h-10 object-cover rounded-full">
+            <div class="flex flex-col text-sm leading-tight">
+                <span class="font-bold text-lg text-green-700">BPJS Kesehatan</span>
+                <span class="text-xs text-gray-500">Badan Penyelenggara Jaminan Sosial</span>
+            </div>
+        </div>
+
+        <!-- Navigasi Utama -->
+        <nav class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+            <a href="#" class="hover:text-blue-600">Profil</a>
+            <div class="group relative">
+                <a href="#" class="hover:text-blue-600 flex items-center">Jaminan Kesehatan <i class="fas fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i></a>
+            </div>
+            
+            <!-- TOMBOL LAYANAN (dengan Dropdown) -->
+            <div class="relative">
+                <a href="#" id="layanan-link" class="hover:text-blue-600 flex items-center font-semibold text-blue-600 cursor-pointer" onclick="toggleDropdown(event)">
+                    Layanan <i id="layanan-icon" class="fas fa-chevron-down text-xs ml-1 transition-transform"></i>
+                </a>
+                
+                <!-- Dropdown Menu (Pop-up) -->
+                <div id="layanan-dropdown" class="service-dropdown hidden absolute bg-white mt-2 rounded-lg shadow-lg border border-gray-100 py-2">
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Alamat BPJS Kesehatan</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Layanan Autodebit</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Program Rehab</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Program Pesiar</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 font-bold text-blue-700">Data Peserta</a>
+                </div>
+            </div>
+            <!-- AKHIR TOMBOL LAYANAN -->
+
+            <a href="#" class="hover:text-blue-600">Informasi Publik</a>
+            <a href="#" class="hover:text-blue-600">Berita</a>
+            <a href="#" class="hover:text-blue-600">Tautan</a>
+            <a href="#" class="hover:text-blue-600">Kontak</a>
+        </nav>
+
+        <!-- Search and ID Dropdown -->
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Cari"
+                    class="pl-4 pr-10 py-2 w-24 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm"
+                />
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="dropdown-id w-10 h-10 rounded-md flex items-center justify-center cursor-pointer group">
+                <span class="text-white text-base font-normal">ID</span>
+                <i class="fas fa-caret-down text-white text-sm hidden"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- --- 2. Konten Utama (Setelah Header) --- -->
+    <div class="flex pt-[64px] min-h-screen bg-white shadow-xl max-w-7xl mx-auto border-x border-gray-200">
+        
+        <!-- --- 2.1. Sidebar Navigasi Layanan (W: 240px) --- -->
+        <aside class="w-[280px] p-6 bg-gray-50 border-r border-gray-200">
+            <div class="text-3xl font-extrabold text-gray-900 mt-4 mb-8">
+                Data Peserta
+            </div>
+
+            <div class="space-y-3">
+                <!-- Navigasi Item: Verifikasi (Active) -->
+                <a href="#" id="sidebar-verifikasi" class="sidebar-item active flex items-center justify-between p-3 rounded-md transition duration-150" onclick="showContent('verifikasi')">
+                    <span class="text-base">Verifikasi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-700"></i>
+                </a>
+
+                <!-- Navigasi Item: List Pelanggan -->
+                <a href="#" id="sidebar-list" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('list')">
+                    <span class="text-base">List Pelanggan</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+
+                <!-- Navigasi Item: Sivera -->
+                <a href="#" id="sidebar-sivera" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('sivera')">
+                    <span class="text-base">Sivera</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- --- 2.2. Konten Utama (Main Content) --- -->
+        <main class="flex-1 p-10 bg-white">
+            
+            <!-- Breadcrumb -->
+            <p class="text-sm text-gray-500 mb-8">
+                Beranda/Layanan/<span class="font-medium">Verifikasi</span>
+            </p>
+
+            <!-- Container Konten Dinamis -->
+            <div id="content-container">
+                
+                <!-- Konten: Verifikasi Data Peserta (Default Active Content) -->
+                <div id="content-verifikasi" class="content-tab">
+                    
+                    <h2 class="text-xl font-extrabold text-[#003882] mb-6">
+                        Verifikasi <span class="text-gray-900">DATA CUSTOMER BPJS KESEHATAN</span>
+                    </h2>
+
+                    <!-- Deskripsi SIVERA -->
+                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-3">SIVERA</h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            SIVERA berfungsi sebagai sistem verifikasi data secara real-time untuk memastikan 100% identitas peserta saat mereka menghubungi CS secara online. Ini penting agar data kesehatan dan kepesertaan yang bersifat pribadi tidak disalahgunakan, sekaligus mempercepat proses layanan.
+                        </p>
+                        
+                        <!-- Tahap Penggunaan -->
+                        <h4 class="text-md font-semibold text-gray-700 mb-2">Tahap penggunaan fitur :</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600 text-sm pl-4">
+                            <li>
+                                <span class="font-bold">Unggah KTP</span>
+                                <p class="text-xs ml-4 text-gray-500">CS mengunggah KTP dari customer yang dilayani</p>
+                            </li>
+                            <li>
+                                <span class="font-bold">Unggah KTP dan Selfie</span>
+                                <p class="text-xs ml-4 text-gray-500">CS mengunggah swafoto (selfie) atau gambar wajah secara langsung peserta melalui kamera perangkat dan bandingkan dengan hasil KTP yang diunggah.</p>
+                            </li>
+                            <li>
+                                <span class="font-bold">Verifikasi dengan Kamera (Liveness Check & Matching)</span>
+                                <p class="text-xs ml-4 text-gray-500">CS membantu peserta dalam melakukan verifikasi data melalui kamera secara realtime</p>
+                            </li>
+                            <li>
+                                <span class="font-bold">Input Hasil ke Sistem</span>
+                                <p class="text-xs ml-4 text-gray-500">Proses selesai</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Tombol Verifikasi (sesuai gambar) -->
+                    <a href="#" class="btn-verifikasi text-white font-semibold py-3 px-8 rounded-lg shadow-md inline-block">
+                        Verifikasi
+                    </a>
+                </div>
+
+                <!-- Konten Placeholder Lainnya (Tersembunyi secara default) -->
+                <div id="content-list" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">List Pelanggan</h2>
+                    <p class="text-gray-600">Informasi detail mengenai daftar pelanggan BPJS Kesehatan akan ditampilkan di sini.</p>
+                </div>
+                
+                <div id="content-sivera" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Sivera</h2>
+                    <p class="text-gray-600">Aplikasi atau laman Sivera (Sistem Verifikasi Peserta) akan diakses di sini.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- FUNGSI NAVIGASI DROPDOWN LAYANAN ---
+        function toggleDropdown(event) {
+            // Mencegah navigasi halaman
+            event.preventDefault(); 
+            
+            const dropdown = document.getElementById('layanan-dropdown');
+            const icon = document.getElementById('layanan-icon');
+
+            // Toggle class 'hidden' untuk menampilkan/menyembunyikan dropdown
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Tampilkan dropdown
+                dropdown.classList.remove('hidden');
+                // Putar ikon ke atas
+                icon.classList.add('rotate-180');
+            } else {
+                // Sembunyikan dropdown
+                dropdown.classList.add('hidden');
+                // Putar ikon kembali ke bawah
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Sembunyikan dropdown jika mengklik di luar area dropdown
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('layanan-dropdown');
+            const link = document.getElementById('layanan-link');
+            const icon = document.getElementById('layanan-icon');
+
+            // Cek apakah klik berasal dari link Layanan atau di dalam dropdown
+            const isClickInsideLink = link.contains(event.target);
+            const isClickInsideDropdown = dropdown.contains(event.target);
+
+            // Jika klik tidak di dalam link Layanan dan dropdown sedang terbuka, sembunyikan.
+            if (!isClickInsideLink && !isClickInsideDropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        });
+
+
+        // --- FUNGSI NAVIGASI SIDEBAR (dari kode sebelumnya) ---
+        function showContent(tabName) {
+            // 1. Sembunyikan semua tab konten
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // 2. Hapus status aktif dari semua item sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active'); 
+                item.classList.remove('bg-gray-50', 'border-r-4', 'border-[#07408d]');
+                item.classList.add('text-gray-700', 'hover:bg-gray-100'); 
+            });
+            
+            // 3. Tampilkan tab konten yang dipilih
+            const targetContent = document.getElementById('content-' + tabName);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+
+            // 4. Tambahkan status aktif pada item sidebar yang diklik
+            const clickedSidebarItem = document.querySelector(`#sidebar-${tabName}`);
+            if (clickedSidebarItem) {
+                clickedSidebarItem.classList.add('active');
+                clickedSidebarItem.classList.remove('text-gray-700', 'hover:bg-gray-100');
+            }
+        }
+        
+        // Inisialisasi tampilan default saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+             // Secara default, tampilkan konten verifikasi dan aktifkan link 'Verifikasi'
+             showContent('verifikasi');
+        });
+        
+        // Tambahkan event listener ke semua item sidebar untuk fungsionalitas showContent
+        document.querySelectorAll('a[onclick]').forEach(item => {
+            if (item.getAttribute('onclick').includes('showContent')) {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = e.currentTarget.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    showContent(tabName);
+                });
+            }
+        });
+
+    </script>
+
+</body>
+</html>

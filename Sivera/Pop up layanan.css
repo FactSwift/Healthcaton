@@ -1,0 +1,83 @@
+/* Container Utama untuk Pop-up (Dropdown) */
+.c_pop-up-layanan-dropdown {
+    /* Posisi Pop-up */
+    position: absolute; /* Penting agar menu melayang */
+    top: 60px;          /* Jarak dari atas (misalnya, di bawah navbar) */
+    right: auto;        /* Atur penempatan kiri/kanan sesuai posisi tombol pemicu */
+    left: 450px;        /* Contoh posisi di bawah tombol "Layanan" */
+
+    /* Tampilan Pop-up */
+    width: 220px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Bayangan untuk kesan melayang */
+    z-index: 1000; /* Pastikan selalu di atas elemen lain */
+
+    /* Biasanya, elemen ini disembunyikan secara default */
+    /* display: none; */ 
+}
+
+/* Daftar Layanan */
+.layanan-list {
+    list-style: none; /* Hapus bullet point */
+    padding: 0;
+    margin: 0;
+}
+
+/* Setiap Item Layanan */
+.layanan-item {
+    padding: 0;
+    margin: 0;
+}
+
+.layanan-item a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px; /* Padding untuk area klik */
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0; /* Garis pemisah tipis */
+    transition: background-color 0.2s;
+}
+
+/* Efek Hover */
+.layanan-item a:hover {
+    background-color: #007bff; /* Warna hover biru */
+    color: white;
+}
+
+/* Hapus border bawah pada item terakhir */
+.layanan-list li:last-child a {
+    border-bottom: none;
+}
+/* ... (Gaya header-main dan header-nav-menu yang sudah ada) ... */
+
+/* 1. Wrapper untuk menahan tombol dan pop-up */
+.nav-item-dropdown-wrapper {
+    position: relative; /* PENTING: Menjadikan wadah ini sebagai acuan posisi pop-up */
+    height: 100%; /* Pastikan tingginya sama dengan link lainnya */
+    display: flex;
+    align-items: center;
+}
+
+/* Catatan: Gaya untuk pop-up itu sendiri (.c-pop-up-layanan-dropdown) 
+   berada di file c_pop-up-layanan.module.css Anda. */
+
+/* ... (Gaya lainnya) ... */
+/* di c_page-profil.module.css */
+.nav-item-dropdown-wrapper {
+    position: relative; /* Ini sangat penting untuk posisi pop-up */
+    /* ... gaya lainnya ... */
+}
+
+/* di c_pop-up-layanan.module.css */
+.c-pop-up-layanan-dropdown {
+    position: absolute;
+    top: 100%; /* Agar muncul tepat di bawah link */
+    /* ... gaya lainnya ... */
+    display: none; /* Sembunyikan secara default */
+}
+.visible {
+    display: block; /* Tampilkan saat state true */
+}

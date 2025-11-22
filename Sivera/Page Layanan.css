@@ -1,0 +1,263 @@
+/*
+  ======================================================
+  Gaya Umum & Layout Kontainer
+  ======================================================
+*/
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/*
+  ======================================================
+  Header Navigasi
+  ======================================================
+*/
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px; /* Padding sisi lebih kecil */
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.header-logo {
+    /* Gaya untuk logo BPJS */
+    height: 40px; 
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 100%;
+}
+
+.header-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    padding: 15px 0; 
+    font-size: 14px;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.nav-link.active,
+.nav-link:hover {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-left: 15px;
+    padding: 2px;
+}
+
+.search-box input[type="text"] {
+    border: none;
+    padding: 5px;
+    width: 100px;
+    outline: none;
+}
+
+.lang-id {
+    background-color: #007bff;
+    color: white;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/*
+  ======================================================
+  Judul Halaman (Breadcrumb)
+  ======================================================
+*/
+.page-title-section {
+    padding: 20px 50px;
+    background-color: #f0f0f0; 
+}
+
+.page-title-h1 {
+    font-size: 32px;
+    color: #333;
+    margin: 0;
+}
+
+.page-breadcrumb {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+/*
+  ======================================================
+  Layout Konten Utama (Sidebar & Content)
+  ======================================================
+*/
+.content-wrapper {
+    display: flex;
+    padding: 30px 50px;
+    gap: 30px;
+}
+
+/*
+  ======================================================
+  Sidebar Menu
+  ======================================================
+*/
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.sidebar-nav {
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+}
+
+.sidebar-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.sidebar-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar-item:hover {
+    background-color: #e9ecef;
+}
+
+.sidebar-item.active {
+    background-color: #fff;
+    color: #007bff;
+    border-left: 5px solid #007bff;
+    padding-left: 10px;
+}
+
+.sidebar-arrow {
+    font-weight: normal;
+    color: #666;
+}
+
+/*
+  ======================================================
+  Content Sivera
+  ======================================================
+*/
+.main-content-area {
+    flex-grow: 1;
+}
+
+.content-box {
+    padding: 20px 30px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.content-header {
+    /* Bagian header untuk title "Verifikasi DATA CUSTOMER..." */
+    background-color: #e9ecef; /* Latar belakang abu-abu muda seperti gambar */
+    padding: 10px 15px;
+    margin: -20px -30px 20px -30px; /* Menutupi padding content-box */
+    border-bottom: 1px solid #ddd;
+}
+
+.content-title {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.verif-word {
+    color: #007bff; /* Warna biru untuk kata 'Verifikasi' */
+    font-weight: bold;
+}
+
+.sivera-description {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.sivera-description p {
+    margin-bottom: 15px;
+}
+
+.sivera-heading {
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.steps-heading {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px !important;
+}
+
+/* Custom list untuk tahapan */
+.steps-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.steps-list li {
+    margin-bottom: 15px;
+    line-height: 1.4;
+    padding-left: 20px;
+    text-indent: -20px;
+}
+
+.step-number {
+    font-weight: bold;
+    color: #555;
+    margin-right: 5px;
+}
+
+.step-detail {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+/* Tombol Verifikasi */
+.verif-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+}
+
+.verif-button:hover {
+    background-color: #0056b3;
+}

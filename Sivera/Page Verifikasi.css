@@ -1,0 +1,110 @@
+/*
+  ======================================================
+  Gaya Kontainer dan Halaman
+  ======================================================
+*/
+.verifikasi-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: white; /* Latar belakang utama putih */
+}
+
+/*
+  ======================================================
+  Header dan Tombol Kembali
+  ======================================================
+*/
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 40px; /* Sesuaikan tinggi logo */
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.back-button {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/*
+  ======================================================
+  Judul Utama
+  ======================================================
+*/
+.main-title {
+    text-align: center;
+    font-size: 40px;
+    color: #4CAF50; /* Warna hijau sesuai gambar */
+    margin: 50px 0 80px 0;
+    font-weight: 600;
+}
+
+/*
+  ======================================================
+  Grid Tombol Aksi (2x2)
+  ======================================================
+*/
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dua kolom yang sama besar */
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Rata kiri */
+    gap: 20px;
+    padding: 25px 40px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 5px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.icon-wrapper {
+    /* Menentukan ukuran visual icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Warna Latar Belakang Tombol (Biru Tua) */
+.action-button {
+    background-color: #2F4060; 
+}

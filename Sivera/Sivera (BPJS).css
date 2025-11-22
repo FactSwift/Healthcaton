@@ -1,0 +1,253 @@
+/*
+  ======================================================
+  Gaya Umum (Hanya untuk kelas yang digunakan di komponen React)
+  ======================================================
+*/
+.c-page-profil-container {
+    /* Menggantikan .app-container dari kode lama Anda */
+    max-width: 1200px; /* Lebar lebih umum untuk tampilan web */
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/*
+  ======================================================
+  Header Navigasi Atas
+  ======================================================
+*/
+.header-main {
+    /* Menggantikan .header-container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 100px; /* Padding disesuaikan dengan gambar */
+    background-color: #fff; /* Header berwarna putih */
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.header-logo {
+    /* Untuk Logo/Judul BPJS */
+    display: flex;
+    align-items: center;
+}
+
+.logo-text {
+    /* Gaya untuk teks logo jika tidak ada gambar */
+    font-weight: bold;
+    color: #007bff; /* Warna biru utama */
+}
+
+.header-nav-menu {
+    /* Menggantikan .header-nav */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    /* Menggantikan .header-nav a */
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 20px 0; /* Area klik/highlight */
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+}
+
+.nav-arrow {
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.header-search {
+    /* Menggantikan input dan tombol Cari */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 15px;
+    color: #666;
+}
+
+.search-icon {
+    font-size: 16px;
+}
+
+.header-lang {
+    /* Menggantikan tombol ID */
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+
+/*
+  ======================================================
+  Judul Halaman (Profil & Breadcrumb)
+  ======================================================
+*/
+.page-title-section {
+    /* Menggantikan .profile-header */
+    padding: 20px 100px;
+    background-color: #f0f0f0; /* Latar belakang abu-abu muda seperti gambar */
+    border-bottom: 1px solid #ddd;
+}
+
+.page-title-h1 {
+    /* Menggantikan .profile-header h2 */
+    font-size: 32px;
+    color: #333;
+    margin: 0;
+}
+
+.page-breadcrumb {
+    /* Menggantikan .profile-header p */
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+/*
+  ======================================================
+  Layout Konten Utama (Sidebar & Content)
+  ======================================================
+*/
+.content-wrapper {
+    /* Menggantikan .page-layout */
+    display: flex;
+    padding: 30px 100px;
+    gap: 30px;
+}
+
+/*
+  ======================================================
+  Sidebar Menu
+  ======================================================
+*/
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.sidebar-nav {
+    border: 1px solid #ddd;
+}
+
+.sidebar-item {
+    /* Menggantikan .sidebar-item dari kode lama */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f7f7f7;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.sidebar-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar-item:hover {
+    background-color: #e9ecef;
+}
+
+.sidebar-item.active {
+    /* Menggantikan .sidebar-item:first-child */
+    background-color: #fff;
+    color: #007bff;
+    border-left: none;
+    padding-left: 10px;
+}
+
+/* Pastikan bar sidebar (termasuk Visi dan Misi) memiliki sudut melengkung */
+.sidebar-menu a,
+.sidebar-menu a.active {
+    border-radius: 10px;
+}
+
+
+/*
+  ======================================================
+  Content Visi Misi
+  ======================================================
+*/
+.main-content-area {
+    /* Menggantikan .content-box */
+    flex-grow: 1;
+}
+
+.content-box {
+    padding: 30px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.content-title {
+    /* Menggantikan .content-title */
+    font-size: 24px;
+    color: #007bff;
+    border-bottom: 2px solid #eee; /* Biru terang untuk judul */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.section-heading {
+    /* Untuk VISI dan MISI */
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.visi-text,
+.misi-list {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.misi-list {
+    list-style-type: none; /* Hapus bullet default */
+    padding-left: 0;
+    counter-reset: item; /* Reset counter untuk numbering kustom */
+}
+
+.misi-list li {
+    margin-bottom: 15px;
+    text-indent: -25px;
+    padding-left: 25px;
+}
+
+.misi-list li::before {
+    /* Membuat numbering kustom 1., 2., 3., dst. */
+    content: counter(item) ". ";
+    counter-increment: item;
+    font-weight: bold;
+    color: #555;
+    margin-right: 5px;
+}
+
+/* Gaya untuk kata yang dibold (seperti di Visi) */
+.visi-text strong {
+    color: #333; /* Menggunakan warna yang lebih gelap agar lebih menonjol */
+    font-weight: 700;
+}

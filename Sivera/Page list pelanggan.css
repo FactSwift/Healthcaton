@@ -1,0 +1,339 @@
+/* list-pelanggan-dark-style.css */
+
+/* Warna Dasar (Dark/Modern Theme) */
+:root {
+    --primary-blue: #007bff; /* Warna biru BPJS */
+    --active-green: #2ecc71; /* Hijau yang lebih cerah */
+    --inactive-red: #e74c3c; /* Merah yang lebih cerah */
+    --bg-page: #f9f9f9; /* Background halaman keseluruhan */
+    --bg-dark: #333333; /* Warna gelap untuk konten utama */
+    --bg-sidebar: #2c3e50; /* Warna sidebar, lebih gelap */
+    --text-light: #ecf0f1; /* Teks terang untuk background gelap */
+    --text-dark: #2c3e50; /* Teks utama untuk background terang */
+    --card-bg: #ffffff; /* Background kartu dan tabel */
+    --border-color: #e0e0e0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Header / Navigation Bar Atas --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: var(--card-bg);
+    border-bottom: 3px solid var(--active-green);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    height: 35px;
+    vertical-align: middle;
+}
+
+.logo span {
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+.main-menu a {
+    text-decoration: none;
+    color: var(--text-dark);
+    margin-left: 15px;
+    font-size: 14px;
+    padding: 10px 0;
+    opacity: 0.8;
+}
+
+.utility-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-container input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    width: 150px;
+    transition: width 0.3s;
+}
+
+.user-profile {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* --- Content Wrapper (Sidebar + Main Content) --- */
+.content-wrapper {
+    display: flex;
+    flex-grow: 1;
+    margin: 20px 40px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Sidebar Navigation --- */
+.sidebar {
+    width: 250px;
+    padding: 30px 0;
+    border-right: 1px solid var(--border-color);
+}
+
+.sidebar-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 30px 20px 30px;
+    color: var(--text-dark);
+}
+
+.sidebar-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: background-color 0.2s;
+    margin: 5px 15px 5px 15px;
+    border-radius: 8px;
+}
+
+.sidebar-item.active {
+    background-color: #f0f0f0;
+}
+
+/* Style untuk halaman yang sedang dilihat (List Pelanggan) */
+.sidebar-item.current {
+    background-color: var(--primary-blue);
+    color: white;
+    font-weight: 600;
+}
+
+.sidebar-item i {
+    color: var(--primary-blue);
+}
+
+.sidebar-item.current i {
+    color: white;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    flex-grow: 1;
+    padding: 30px 40px;
+}
+
+.page-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+.breadcrumb-main {
+    font-size: 14px;
+    color: #95a5a6; /* Abu-abu terang */
+    margin-bottom: 30px;
+}
+
+/* --- Statistik Cards --- */
+.stats-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    flex: 1;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0f2f1; /* Background icon yang sangat terang */
+    border: 3px solid #b2dfdb;
+    margin-right: 20px;
+    color: var(--active-green);
+}
+
+/* Warna ikon disesuaikan untuk setiap kartu */
+.stats-grid .stat-card:nth-child(2) .icon-circle {
+    color: #f39c12; /* Oranye/Kuning */
+    border-color: #f9e79f;
+}
+.stats-grid .stat-card:nth-child(3) .icon-circle {
+    color: var(--primary-blue);
+    border-color: #d6eaf8;
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 5px 0;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.stat-trend {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.green-text { color: var(--active-green); }
+.red-text { color: var(--inactive-red); }
+
+/* --- Table Section --- */
+.data-table-section {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.active-members {
+    font-size: 14px;
+    color: var(--active-green);
+    margin: 5px 0 0 0;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.search-box, .sort-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    height: 35px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 0 5px;
+    font-size: 14px;
+}
+
+.search-box i {
+    color: var(--text-light);
+}
+
+/* Tabel Styling */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.data-table thead th {
+    text-align: left;
+    padding: 15px;
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+}
+
+.data-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: var(--text-dark);
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+.status-badge.active {
+    background-color: var(--active-green);
+}
+
+.status-badge.inactive {
+    background-color: var(--inactive-red);
+}
+
+/* --- Pagination --- */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.page-numbers button {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: var(--text-dark);
+    padding: 8px 12px;
+    margin: 0 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.page-numbers button.current-page {
+    background-color: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}

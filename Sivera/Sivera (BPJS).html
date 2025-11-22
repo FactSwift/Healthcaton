@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - BPJS Kesehatan</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Menggunakan font Inter sebagai standar */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8; /* Background luar halaman */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Area Header dengan latar putih dan shadow */
+        .top-header {
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+            z-index: 20;
+        }
+
+        /* Dropdown/Ikon ID di kanan atas */
+        .dropdown-id {
+            background-color: #07408d; /* Warna biru gelap BPJS */
+        }
+        
+        /* Gaya navigasi sidebar aktif */
+        .sidebar-item.active {
+            background-color: #f0f3f8; /* Warna latar belakang abu-abu muda */
+            border-right: 4px solid #07408d; /* Garis biru sebagai indikator aktif */
+            font-weight: 600;
+            color: #1f2937; /* text-gray-800 */
+        }
+
+        /* Gaya navigasi sidebar non-aktif */
+        .sidebar-item:not(.active) {
+            border-right: 4px solid transparent;
+        }
+        
+        /* Gaya tautan aktif di header */
+        .nav-link.active {
+            font-weight: 700;
+            color: #07408d; /* Warna biru BPJS */
+        }
+    </style>
+</head>
+<body class="bg-[#f0f3f8]">
+
+    <!-- --- 1. Header Tetap (Top Bar) --- -->
+    <header class="top-header fixed top-0 left-0 w-full bg-white flex items-center justify-between px-10 h-[64px]">
+        <!-- Logo BPJS Kesehatan -->
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40/003882/ffffff?text=BPJS" alt="BPJS Logo" class="w-10 h-10 object-cover rounded-full">
+            <div class="flex flex-col text-sm leading-tight">
+                <span class="font-bold text-lg text-green-700">BPJS Kesehatan</span>
+                <span class="text-xs text-gray-500">Badan Penyelenggara Jaminan Sosial</span>
+            </div>
+        </div>
+
+        <!-- Navigasi Utama -->
+        <nav class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+            <!-- Link Profil Aktif -->
+            <a href="#" class="nav-link active">Profil</a>
+            
+            <div class="group relative">
+                <a href="#" class="nav-link hover:text-blue-600 flex items-center">Jaminan Kesehatan <i class="fas fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i></a>
+            </div>
+            
+            <!-- Link Layanan (dengan Dropdown - seperti yang diminta sebelumnya) -->
+            <div class="relative">
+                <a href="#" id="layanan-link" class="nav-link hover:text-blue-600 flex items-center cursor-pointer" onclick="toggleDropdown(event)">
+                    Layanan <i id="layanan-icon" class="fas fa-chevron-down text-xs ml-1 transition-transform"></i>
+                </a>
+                
+                <!-- Dropdown Menu (Pop-up) -->
+                <div id="layanan-dropdown" class="service-dropdown hidden absolute bg-white mt-2 rounded-lg shadow-lg border border-gray-100 py-2 min-w-[200px] z-50">
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Alamat BPJS Kesehatan</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Layanan Autodebit</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Program Rehab</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Program Pesiar</a>
+                    <!-- BARIS INI YANG DIPERBAIKI: Mengganti href="#" menjadi href="page_layanan.html" -->
+                    <a href="page_layanan.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 font-bold text-blue-700">Data Peserta</a>
+                </div>
+            </div>
+
+            <a href="#" class="nav-link hover:text-blue-600">Informasi Publik</a>
+            <a href="#" class="nav-link hover:text-blue-600">Berita</a>
+            <a href="#" class="nav-link hover:text-blue-600">Tautan</a>
+            <a href="#" class="nav-link hover:text-blue-600">Kontak</a>
+        </nav>
+
+        <!-- Search and ID Dropdown -->
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Cari"
+                    class="pl-4 pr-10 py-2 w-24 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm"
+                />
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="dropdown-id w-10 h-10 rounded-md flex items-center justify-center cursor-pointer group">
+                <span class="text-white text-base font-normal">ID</span>
+                <i class="fas fa-caret-down text-white text-sm hidden"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- --- 2. Konten Utama (Setelah Header) --- -->
+    <div class="flex pt-[64px] min-h-screen bg-white shadow-xl max-w-7xl mx-auto border-x border-gray-200">
+        
+        <!-- --- 2.1. Sidebar Navigasi Profil (W: 240px) --- -->
+        <aside class="w-[280px] p-6 bg-gray-50 border-r border-gray-200">
+            <h1 class="text-3xl font-extrabold text-gray-900 mt-4 mb-3">Profil</h1>
+            <p class="text-sm text-gray-500 mb-8">Beranda/Profil</p>
+
+            <div class="space-y-3">
+                <!-- Navigasi Item: Visi dan Misi (Active) -->
+                <a href="#" id="sidebar-visimisi" class="sidebar-item active flex items-center justify-between p-3 rounded-md transition duration-150" onclick="showContent('visimisi')">
+                    <span class="text-base">Visi dan Misi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-700"></i>
+                </a>
+
+                <!-- Navigasi Item: Struktur Organisasi -->
+                <a href="#" id="sidebar-struktur" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('struktur')">
+                    <span class="text-base">Struktur Organisasi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+
+                <!-- Navigasi Item: Sejarah -->
+                <a href="#" id="sidebar-sejarah" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('sejarah')">
+                    <span class="text-base">Sejarah</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                
+                <!-- Navigasi Item: Landasan Hukum -->
+                <a href="#" id="sidebar-hukum" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('hukum')">
+                    <span class="text-base">Landasan Hukum</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+
+                <!-- Navigasi Item: Tugas dan Fungsi -->
+                <a href="#" id="sidebar-tugasfungsi" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('tugasfungsi')">
+                    <span class="text-base">Tugas dan Fungsi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                
+                <!-- Navigasi Item: Budaya Organisasi -->
+                <a href="#" id="sidebar-budaya" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('budaya')">
+                    <span class="text-base">Budaya Organisasi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+                
+                <!-- Navigasi Item: Direksi -->
+                <a href="#" id="sidebar-direksi" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showContent('direksi')">
+                    <span class="text-base">Direksi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- --- 2.2. Konten Utama Profil --- -->
+        <main class="flex-1 p-10 bg-white">
+            
+            <!-- Container Konten Dinamis -->
+            <div id="content-container">
+                
+                <!-- Konten: Visi dan Misi (Default Active Content) -->
+                <div id="content-visimisi" class="content-tab">
+                    
+                    <h2 class="text-xl font-extrabold text-[#003882] mb-6">
+                        Visi Dan Misi BPJS KESEHATAN
+                    </h2>
+
+                    <!-- Visi -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">VISI</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Menjadi badan penyelenggara yang <span class="font-semibold text-blue-700">dinamis, akuntabel, dan tepercaya</span> untuk mewujudkan jaminan kesehatan yang <span class="font-semibold text-blue-700">berkualitas, berkelanjutan, berkeadilan, dan inklusif</span>.
+                        </p>
+                    </div>
+
+                    <!-- Misi -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">MISI</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-700 pl-4">
+                            <li>Meningkatkan kualitas layanan kepada peserta melalui layanan terintegrasi berbasis teknologi informasi.</li>
+                            <li>Menjaga keberlanjutan Program JKN-KIS dengan menyeimbangkan antara dana jaminan sosial dan biaya manfaat yang terkendali.</li>
+                            <li>Memberikan jaminan kesehatan yang berkeadilan dan inklusif mencakup seluruh penduduk Indonesia.</li>
+                            <li>Memperkuat engagement dengan meningkatkan sinergi dan kolaborasi pemangku kepentingan dalam mengimplementasikan program JKN-KIS.</li>
+                            <li>Meningkatkan kapabilitas Badan dalam menyelenggarakan Program JKN-KIS secara efisien dan efektif yang akuntabel, berhati-hati dengan prinsip tata kelola yang baik, SDM yang produktif, mendorong transformasi digital serta inovasi yang berkelanjutan.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Konten Placeholder: Struktur Organisasi -->
+                <div id="content-struktur" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Struktur Organisasi</h2>
+                    <p class="text-gray-600">Halaman ini akan menampilkan bagan atau deskripsi mengenai struktur organisasi BPJS Kesehatan.</p>
+                </div>
+                
+                <!-- Konten Placeholder: Sejarah -->
+                <div id="content-sejarah" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Sejarah</h2>
+                    <p class="text-gray-600">Halaman ini akan menjelaskan perjalanan sejarah pembentukan dan perkembangan BPJS Kesehatan.</p>
+                </div>
+
+                <!-- Konten Placeholder: Landasan Hukum -->
+                <div id="content-hukum" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Landasan Hukum</h2>
+                    <p class="text-gray-600">Halaman ini akan mencantumkan peraturan dan undang-undang yang menjadi dasar operasional BPJS Kesehatan.</p>
+                </div>
+                
+                <!-- Konten Placeholder: Tugas dan Fungsi -->
+                <div id="content-tugasfungsi" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Tugas dan Fungsi</h2>
+                    <p class="text-gray-600">Halaman ini akan merinci tugas pokok dan fungsi BPJS Kesehatan.</p>
+                </div>
+                
+                <!-- Konten Placeholder: Budaya Organisasi -->
+                <div id="content-budaya" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Budaya Organisasi</h2>
+                    <p class="text-gray-600">Halaman ini akan memuat nilai-nilai dan budaya kerja yang diterapkan di BPJS Kesehatan.</p>
+                </div>
+                
+                <!-- Konten Placeholder: Direksi -->
+                <div id="content-direksi" class="content-tab hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Direksi</h2>
+                    <p class="text-gray-600">Halaman ini akan menampilkan daftar dan profil anggota direksi BPJS Kesehatan.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- FUNGSI NAVIGASI DROPDOWN LAYANAN (Diperlukan agar Header berfungsi) ---
+        function toggleDropdown(event) {
+            event.preventDefault(); 
+            const dropdown = document.getElementById('layanan-dropdown');
+            const icon = document.getElementById('layanan-icon');
+
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                dropdown.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Sembunyikan dropdown jika mengklik di luar area dropdown
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('layanan-dropdown');
+            const link = document.getElementById('layanan-link');
+            const icon = document.getElementById('layanan-icon');
+
+            const isClickInsideLink = link.contains(event.target);
+            const isClickInsideDropdown = dropdown.contains(event.target);
+
+            if (!isClickInsideLink && !isClickInsideDropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        });
+
+
+        // --- FUNGSI NAVIGASI SIDEBAR PROFIL ---
+        function showContent(tabName) {
+            // 1. Sembunyikan semua tab konten
+            document.querySelectorAll('.content-tab').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // 2. Hapus status aktif dari semua item sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active'); 
+                item.classList.remove('bg-gray-50', 'border-r-4', 'border-[#07408d]');
+                item.classList.add('text-gray-700', 'hover:bg-gray-100'); 
+            });
+            
+            // 3. Tampilkan tab konten yang dipilih
+            const targetContent = document.getElementById('content-' + tabName);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+
+            // 4. Tambahkan status aktif pada item sidebar yang diklik
+            const clickedSidebarItem = document.querySelector(`#sidebar-${tabName}`);
+            if (clickedSidebarItem) {
+                clickedSidebarItem.classList.add('active');
+                clickedSidebarItem.classList.remove('text-gray-700', 'hover:bg-gray-100');
+            }
+        }
+        
+        // Inisialisasi tampilan default saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+             // Secara default, tampilkan konten Visi dan Misi dan aktifkan link tersebut
+             showContent('visimisi');
+             
+             // Tambahkan event listener ke semua item sidebar
+             document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Ambil nama tab dari ID
+                    const tabName = e.currentTarget.id.replace('sidebar-', '');
+                    showContent(tabName);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIVERA Chatbot BPJS</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Menggunakan font Inter sebagai standar */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f0f0; /* Background luar halaman */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Custom Styles untuk Gradasi Teks SIVERA --- */
+        .sivera-gradient-text {
+            /* Meniru gradasi dari kode React: rgba(7,64,141,1) ke rgba(105,157,98,1) */
+            background-image: linear-gradient(144deg, #07408d 0%, #699d62 44%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Styling spesifik untuk kontainer utama, meniru frame 832px */
+        .main-frame {
+            width: 1280px;
+            height: 832px;
+            background-color: white;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Sudut sedikit melengkung */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="main-frame">
+        
+        <!-- Header Section -->
+        <header class="flex justify-between items-center p-8 border-b border-gray-100">
+            <!-- Logo BPJS Kesehatan (Simulasi: Menggantikan rectangle2) -->
+            <div class="flex items-center space-x-3">
+                <!-- Simulasi Ikon Hati -->
+                <i class="fas fa-heartbeat text-3xl text-green-700"></i>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold text-green-800">BPJS Kesehatan</span>
+                    <span class="text-xs text-gray-600">Badan Penyelenggara Jaminan Sosial</span>
+                </div>
+            </div>
+
+            <!-- Tombol Kembali (Meniru rectangle3) -->
+            <button 
+                id="btn-kembali"
+                class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-3 px-8 rounded-xl shadow-lg transition duration-150"
+            >
+                Kembali
+            </button>
+        </header>
+
+        <!-- Main Content (SIVERA Logo) -->
+        <main class="flex flex-col items-center justify-center h-[calc(832px-80px)]">
+            
+            <!-- Avatar SIVERA (Simulasi: Menggantikan image2/rectangle4) -->
+            <div class="mb-4">
+                <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                    <i class="fas fa-robot text-4xl text-gray-500"></i> 
+                </div>
+            </div>
+
+            <!-- Teks SIVERA (Meniru gradasi dan font besar) -->
+            <h1 class="sivera-gradient-text text-8xl font-black text-center mb-52">
+                SIVERA
+            </h1>
+        </main>
+        
+        <!-- Chat Input Area -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-[800px] max-w-[90%] bg-white rounded-full border border-gray-300 shadow-xl p-3 flex items-center space-x-4">
+            
+            <!-- Label/Placeholder -->
+            <span class="absolute -top-6 left-6 text-xs font-bold text-gray-400 uppercase">
+                Bertanya ke SIVERA
+            </span>
+
+            <!-- Tombol Add/Attachment (Meniru vector5/vector) -->
+            <button 
+                id="btn-add"
+                class="p-2 text-gray-500 hover:text-green-600 transition duration-150"
+            >
+                <i class="fas fa-plus text-xl"></i>
+            </button>
+
+            <!-- Input Field -->
+            <input
+                id="chat-input"
+                type="text"
+                class="flex-grow text-lg font-medium placeholder-gray-400 focus:outline-none"
+                placeholder=""
+                aria-label="Chat input"
+            />
+
+            <!-- Ikon Kamera dan Mikrofon (Meniru vector6, vector7, vector8) -->
+            <div class="flex space-x-4">
+                <button 
+                    id="btn-image"
+                    class="p-2 text-gray-400 hover:text-blue-500 transition duration-150"
+                >
+                    <i class="fas fa-camera text-xl"></i>
+                </button>
+                <button 
+                    id="btn-voice"
+                    class="p-2 text-green-700 hover:text-green-600 transition duration-150"
+                >
+                    <i class="fas fa-microphone text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logika JavaScript sederhana untuk simulasi interaksi
+        const inputField = document.getElementById('chat-input');
+        const btnSend = document.getElementById('btn-voice'); // Gunakan mic sebagai tombol kirim Enter
+        
+        document.getElementById('btn-kembali').addEventListener('click', () => {
+            console.log("Kembali diklik.");
+            // Logika navigasi kembali di sini
+        });
+
+        document.getElementById('btn-add').addEventListener('click', () => {
+            console.log("Tombol Tambah/Attachment diklik.");
+        });
+
+        document.getElementById('btn-image').addEventListener('click', () => {
+            console.log("Tombol Unggah Gambar diklik.");
+        });
+
+        document.getElementById('btn-voice').addEventListener('click', () => {
+             const message = inputField.value.trim();
+             if (message) {
+                 console.log("Mengirim pesan:", message);
+                 // Logika pengiriman pesan ke API di sini
+                 inputField.value = '';
+             } else {
+                 console.log("Input Suara diklik.");
+             }
+        });
+
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = inputField.value.trim();
+                if (message) {
+                    console.log("Mengirim pesan (via Enter):", message);
+                    // Logika pengiriman pesan ke API di sini
+                    inputField.value = '';
+                }
+            }
+        });
+
+        // Set input fokus pada pemuatan halaman
+        window.onload = () => inputField.focus();
+    </script>
+
+</body>
+</html>

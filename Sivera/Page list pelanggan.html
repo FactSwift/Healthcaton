@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Pelanggan - BPJS Kesehatan</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Menggunakan font Inter sebagai standar */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8; /* Background luar halaman */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Area Header dengan latar putih dan shadow */
+        .top-header {
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+            z-index: 20;
+        }
+
+        /* Dropdown/Ikon ID di kanan atas */
+        .dropdown-id {
+            background-color: #1a237e; /* Warna biru gelap */
+        }
+        
+        /* Gaya untuk status 'Active' */
+        .status-active {
+            background-color: #d1fae5; /* green-100 */
+            color: #059669; /* green-700 */
+            border-radius: 9999px; /* full rounded */
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Gaya untuk status 'Inactive' */
+        .status-inactive {
+            background-color: #fee2e2; /* red-100 */
+            color: #dc2626; /* red-700 */
+            border-radius: 9999px; /* full rounded */
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 0.875rem; /* text-sm */
+        }
+    </style>
+</head>
+<body class="bg-[#f0f3f8]">
+
+    <!-- --- 1. Header Tetap (Top Bar) --- -->
+    <header class="top-header fixed top-0 left-0 w-full bg-white flex items-center justify-between px-10 h-[64px]">
+        <!-- Logo BPJS Kesehatan -->
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40/003882/ffffff?text=BPJS" alt="BPJS Logo" class="w-10 h-10 object-cover rounded-full">
+            <div class="flex flex-col text-sm leading-tight">
+                <span class="font-bold text-lg text-green-700">BPJS Kesehatan</span>
+                <span class="text-xs text-gray-500">Badan Penyelenggara Jaminan Sosial</span>
+            </div>
+        </div>
+
+        <!-- Navigasi dan Pencarian -->
+        <nav class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+            <a href="#" class="hover:text-blue-600">Profil</a>
+            <div class="group relative">
+                <a href="#" class="hover:text-blue-600 flex items-center">Jaminan Kesehatan <i class="fas fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i></a>
+            </div>
+            <div class="group relative">
+                <a href="#" class="hover:text-blue-600 flex items-center text-blue-600 font-semibold">Layanan <i class="fas fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i></a>
+            </div>
+            <a href="#" class="hover:text-blue-600">Informasi Publik</a>
+            <a href="#" class="hover:text-blue-600">Berita</a>
+            <a href="#" class="hover:text-blue-600">Tautan</a>
+            <a href="#" class="hover:text-blue-600">Kontak</a>
+        </nav>
+
+        <!-- Search and ID Dropdown -->
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Cari"
+                    class="pl-4 pr-10 py-2 w-32 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm"
+                />
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="dropdown-id w-10 h-10 rounded-md flex items-center justify-center cursor-pointer group">
+                <span class="text-white text-base font-normal">ID</span>
+                <i class="fas fa-caret-down text-white text-sm hidden"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- --- 2. Konten Utama (Setelah Header) --- -->
+    <div class="flex pt-[64px] min-h-screen bg-white shadow-xl">
+        
+        <!-- --- 2.1. Sidebar Navigasi (W: 240px) --- -->
+        <aside class="w-[240px] p-4 bg-white border-r border-gray-200">
+            <div class="space-y-2 pt-16">
+                <!-- Navigasi Item: Verifikasi -->
+                <a href="#" class="flex items-center justify-between p-3 rounded-xl text-gray-700 hover:bg-gray-100 transition duration-150">
+                    <span class="font-medium">Verifikasi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+
+                <!-- Navigasi Item: List Pelanggan (Active) -->
+                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-700 font-semibold shadow-inner">
+                    <span class="font-bold">List Pelanggan</span>
+                    <i class="fas fa-chevron-right text-xs text-blue-700"></i>
+                </a>
+
+                <!-- Navigasi Item: Sivera -->
+                <a href="#" class="flex items-center justify-between p-3 rounded-xl text-gray-700 hover:bg-gray-100 transition duration-150">
+                    <span class="font-medium">Sivera</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- --- 2.2. Konten Utama (Main Content) --- -->
+        <main class="flex-1 p-10 bg-[#fcfcfc]">
+            
+            <!-- Judul Halaman dan Breadcrumb -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-extrabold text-black mb-1">
+                    List Pelanggan
+                </h1>
+                <p class="text-sm text-gray-500">
+                    Beranda/Layanan/ verifikasi/ <span class="font-medium">List Pelanggan</span>
+                </p>
+            </div>
+
+            <!-- --- 3. Kartu Statistik Ringkasan --- -->
+            <div class="grid grid-cols-3 gap-6 mb-10">
+                
+                <!-- Card 1: Layanan Terbuka -->
+                <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 border border-gray-100">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-500 border-4 border-green-200">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Layanan Terbuka</p>
+                        <p class="text-3xl font-bold text-gray-800">5,423</p>
+                        <p class="text-xs text-green-500 font-medium flex items-center">
+                            <i class="fas fa-caret-up mr-1"></i> 16% this month
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Kepuasan Pelanggan -->
+                <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 border border-gray-100">
+                    <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 border-4 border-red-200">
+                        <i class="fas fa-user-check text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Kepuasan Pelanggan</p>
+                        <p class="text-3xl font-bold text-gray-800">60%</p>
+                        <p class="text-xs text-red-500 font-medium flex items-center">
+                            <i class="fas fa-caret-down mr-1"></i> 1% this month
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Peserta Sedang Aktif -->
+                <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 border border-gray-100">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 border-4 border-blue-200">
+                        <i class="fas fa-desktop text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Peserta Sedang Aktif</p>
+                        <p class="text-3xl font-bold text-gray-800">189</p>
+                        <p class="text-xs text-gray-500 font-medium flex items-center">
+                             &nbsp; 
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- --- 4. Tabel Peserta BPJS --- -->
+            <div class="bg-white p-6 rounded-xl shadow-2xl border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Peserta BPJS</h2>
+                    <span class="text-green-600 text-sm font-semibold">Active Members</span>
+                </div>
+
+                <!-- Search and Filter Bar -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="relative w-72">
+                        <input 
+                            type="text" 
+                            placeholder="Cari disini"
+                            class="pl-10 pr-4 py-2 w-full rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        />
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                        <span>Short by:</span>
+                        <select class="p-2 border border-gray-300 rounded-lg bg-white appearance-none pr-8">
+                            <option>Newest</option>
+                            <option>Oldest</option>
+                            <option>Status</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 pointer-events-none text-xs text-gray-500"></i>
+                    </div>
+                </div>
+
+                <!-- Tabel Data -->
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="text-left text-sm font-semibold text-gray-500 uppercase tracking-wider bg-gray-50">
+                            <th class="px-6 py-3">Nama Peserta</th>
+                            <th class="px-6 py-3">No. Kartu Keluarga</th>
+                            <th class="px-6 py-3">Nomor BPJS</th>
+                            <th class="px-6 py-3">Kelas</th>
+                            <th class="px-6 py-3">Daerah</th>
+                            <th class="px-6 py-3 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100 text-sm font-medium text-gray-800">
+                        <!-- Data Baris 1 -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">Arneza Alfaz</td>
+                            <td class="px-6 py-4 whitespace-nowrap">3273201809150024</td>
+                            <td class="px-6 py-4 whitespace-nowrap">1031-3391-101</td>
+                            <td class="px-6 py-4 whitespace-nowrap">I (satu)</td>
+                            <td class="px-6 py-4 whitespace-nowrap">Cakung</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="status-active">Active</span>
+                            </td>
+                        </tr>
+                        <!-- Data Baris 2 -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">Dirga Dimastra</td>
+                            <td class="px-6 py-4 whitespace-nowrap">3273201809150024</td>
+                            <td class="px-6 py-4 whitespace-nowrap">1031-3391-101</td>
+                            <td class="px-6 py-4 whitespace-nowrap">III (tiga)</td>
+                            <td class="px-6 py-4 whitespace-nowrap">Purwakarta</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="status-inactive">Inactive</span>
+                            </td>
+                        </tr>
+                        <!-- Data Baris 3 -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">Ronald Richards</td>
+                            <td class="px-6 py-4 whitespace-nowrap">3273201809150024</td>
+                            <td class="px-6 py-4 whitespace-nowrap">1031-3391-101</td>
+                            <td class="px-6 py-4 whitespace-nowrap">II (dua)</td>
+                            <td class="px-6 py-4 whitespace-nowrap">Bandung</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="status-inactive">Inactive</span>
+                            </td>
+                        </tr>
+                        <!-- Data Baris 4 -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">Marvin McKinney</td>
+                            <td class="px-6 py-4 whitespace-nowrap">3273201809150024</td>
+                            <td class="px-6 py-4 whitespace-nowrap">1031-3391-101</td>
+                            <td class="px-6 py-4 whitespace-nowrap">II (dua)</td>
+                            <td class="px-6 py-4 whitespace-nowrap">Cianjur</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="status-active">Active</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
