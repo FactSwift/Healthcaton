@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Wajah KTP - Deteksi Fraud</title>
+    <link rel="stylesheet" href="face-verification.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Verifikasi Identitas KTP</h1>
+            <p class="subtitle">Sistem Deteksi Fraud dengan Face Recognition</p>
+        </header>
+
+        <div class="verification-steps">
+            <div class="step" id="step-indicator-1">
+                <div class="step-number active">1</div>
+                <span>Upload KTP</span>
+            </div>
+            <div class="step" id="step-indicator-2">
+                <div class="step-number">2</div>
+                <span>Ambil Foto Selfie</span>
+            </div>
+            <div class="step" id="step-indicator-3">
+                <div class="step-number">3</div>
+                <span>Verifikasi</span>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Step 1: Upload KTP -->
+            <div class="verification-section active" id="section-1">
+                <div class="card">
+                    <h2>📋 Upload Foto KTP Anda</h2>
+                    <p class="instruction">Pastikan foto KTP jelas dan tidak blur</p>
+                    
+                    <div class="upload-area" id="ktp-upload-area">
+                        <input type="file" id="ktp-input" accept="image/*" hidden>
+                        <label for="ktp-input" class="upload-label">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Klik untuk upload atau drag & drop</p>
+                            <span class="file-types">PNG, JPG, JPEG (Max 5MB)</span>
+                        </label>
+                    </div>
+
+                    <div class="preview-container" id="ktp-preview-container" style="display: none;">
+                        <h3>Preview KTP:</h3>
+                        <div class="image-wrapper">
+                            <canvas id="ktp-canvas"></canvas>
+                            <div class="face-box" id="ktp-face-box"></div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="resetKTP()">
+                            <span>🔄 Upload Ulang</span>
+                        </button>
+                    </div>
+
+                    <div class="status-message" id="ktp-status"></div>
+                    
+                    <button class="btn btn-primary" id="next-to-selfie" disabled onclick="goToSelfie()">
+                        Lanjut ke Selfie →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Selfie Capture -->
+            <div class="verification-section" id="section-2">
+                <div class="card">
+                    <h2>📸 Ambil Foto Selfie</h2>
+                    <p class="instruction">Pilih metode pengambilan foto selfie</p>
+
+                    <!-- Selfie Method Selection -->
+                    <div class="selfie-method-selector" id="selfie-method-selector">
+                        <button class="method-btn active" onclick="selectSelfieMethod('camera')">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span>Gunakan Kamera</span>
+                        </button>
+                        <button class="method-btn" onclick="selectSelfieMethod('upload')">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Upload Foto</span>
+                        </button>
+                    </div>
+
+                    <!-- Camera Capture Section -->
+                    <div class="camera-container" id="camera-container" style="display: none;">
+                        <video id="video" autoplay playsinline></video>
+                        <canvas id="selfie-canvas" style="display: none;"></canvas>
+                        <div class="face-overlay" id="face-overlay">
+                            <div class="face-guide"></div>
+                            <canvas id="face-detection-overlay"></canvas>
+                        </div>
+                        <div class="camera-status" id="camera-status">
+                            <span class="status-dot"></span>
+                            <span id="face-detection-status">Mencari wajah...</span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Section -->
+                    <div class="upload-area" id="selfie-upload-area" style="display: none;">
+                        <input type="file" id="selfie-input" accept="image/*" hidden>
+                        <label for="selfie-input" class="upload-label">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Upload Foto Selfie</p>
+                            <span class="file-types">PNG, JPG, JPEG (Max 5MB)</span>
+                        </label>
+                    </div>
+
+                    <div class="preview-container" id="selfie-preview-container" style="display: none;">
+                        <h3>Preview Selfie:</h3>
+                        <div class="image-wrapper">
+                            <canvas id="selfie-preview-canvas"></canvas>
+                            <div class="face-box" id="selfie-face-box"></div>
+                        </div>
+                    </div>
+
+                    <div class="status-message" id="selfie-status"></div>
+
+                    <div class="camera-controls">
+                        <button class="btn btn-secondary" onclick="goBackToKTP()">
+                            ← Kembali
+                        </button>
+                        <button class="btn btn-primary" id="capture-btn" style="display: none;" onclick="captureSelfie()">
+                            📷 Ambil Foto
+                        </button>
+                        <button class="btn btn-secondary" id="retake-btn" style="display: none;" onclick="retakeSelfie()">
+                            🔄 Foto Ulang
+                        </button>
+                        <button class="btn btn-success" id="verify-btn" style="display: none;" onclick="verifyFaces()">
+                            ✓ Verifikasi Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Verification Result -->
+            <div class="verification-section" id="section-3">
+                <div class="card">
+                    <div class="result-container" id="result-container">
+                        <div class="loading-spinner" id="loading">
+                            <div class="spinner"></div>
+                            <p>Memverifikasi identitas...</p>
+                        </div>
+
+                        <div class="result-content" id="result-content" style="display: none;">
+                            <div class="result-icon" id="result-icon"></div>
+                            <h2 id="result-title"></h2>
+                            <p id="result-message"></p>
+
+                            <div class="comparison-container">
+                                <div class="comparison-images">
+                                    <div class="comparison-item">
+                                        <span class="label">Foto KTP</span>
+                                        <canvas id="result-ktp-canvas"></canvas>
+                                    </div>
+                                    <div class="vs-divider">VS</div>
+                                    <div class="comparison-item">
+                                        <span class="label">Foto Selfie</span>
+                                        <canvas id="result-selfie-canvas"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Tingkat Kemiripan:</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" id="similarity-bar"></div>
+                                        </div>
+                                        <span class="metric-value" id="similarity-value">0%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Confidence Score:</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" id="confidence-bar"></div>
+                                        </div>
+                                        <span class="metric-value" id="confidence-value">0%</span>
+                                    </div>
+                                </div>
+
+                                <div class="details-box" id="details-box">
+                                    <h4>Detail Analisis:</h4>
+                                    <ul id="analysis-details"></ul>
+                                </div>
+                            </div>
+
+                            <div class="result-actions">
+                                <button class="btn btn-primary" onclick="startOver()">
+                                    🔄 Verifikasi Ulang
+                                </button>
+                                <button class="btn btn-secondary" onclick="downloadReport()">
+                                    📄 Download Laporan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>ℹ️ Informasi</h3>
+            <ul>
+                <li>Pastikan pencahayaan cukup terang</li>
+                <li>Foto KTP harus jelas dan tidak kabur</li>
+                <li>Posisikan wajah di tengah saat selfie</li>
+                <li>Hindari menggunakan kacamata atau topi</li>
+                <li>Data tidak disimpan di server (100% lokal)</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>🔒 Privasi Terjamin - Semua proses dilakukan di browser Anda</p>
+            <p class="tech-info">Powered by Face-API.js & TensorFlow.js</p>
+        </footer>
+    </div>
+
+    <script src="face-verification.js"></script>
+</body>
+</html>

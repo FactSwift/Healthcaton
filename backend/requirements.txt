@@ -1,0 +1,28 @@
+# Face Verification Backend - Requirements
+
+# FastAPI Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# DeepFace and Dependencies
+deepface==0.0.92
+tf-keras
+
+# Image Processing
+opencv-python==4.8.1.78
+opencv-contrib-python==4.8.1.78
+Pillow==10.1.0
+numpy==1.26.4
+
+# TensorFlow GPU version for NVIDIA RTX 4060
+# Using newer version with better CUDA 12 support
+tensorflow==2.16.1
+
+# Optional: Untuk performa lebih baik
+# mtcnn==0.1.1
+# retina-face==0.0.13
+
+# Utilities
+pydantic==2.5.0
+python-jose[cryptography]==3.3.0
