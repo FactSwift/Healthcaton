@@ -1,0 +1,350 @@
+{
+  "name": "Local Chatbot with Retrieval Augmented Generation (RAG)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Add your file here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a00e5b5b-1cc1-4272-9790-8ffde3c92efb",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        512,
+        352
+      ],
+      "webhookId": "4e1e20d4-f759-42c8-8439-87b93f43aa7c",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "rag_collection",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "1218186e-a93e-4e05-b47e-a395f28cf5f9",
+      "name": "Qdrant Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "position": [
+        736,
+        352
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "qdrantApi": {
+          "id": "PlvscuggNTqlfg0f",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "af14443b-ae01-48dc-8552-5ded7a27fce2",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        880,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 250,
+        "options": {}
+      },
+      "id": "660380c5-63da-4404-98e6-f9c0ee9aaa90",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        976,
+        784
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Data Ingestion\n**Add data to the semantic database",
+        "height": 700,
+        "width": 840,
+        "color": 3
+      },
+      "id": "49dbe387-751f-4a2e-8803-290bc2c06ec5",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "45683271-af59-41d0-9e69-af721d566661",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        1456,
+        320
+      ],
+      "webhookId": "5e56a263-3a40-44bd-bc9d-1cfb3bc2a87d",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant. You have access to a tool to retrieve data from a semantic database to answer questions. Always provide arguments when you execute the tool"
+        }
+      },
+      "id": "af562588-2e8c-4c0b-b041-d6fc8c0affd0",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1728,
+        320
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {},
+      "id": "de87b7bb-6fec-4d8f-a77a-25bc3a30a038",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1776,
+        560
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "retriever",
+        "toolDescription": "Retrieve data from a semantic database to answer questions",
+        "qdrantCollection": {
+          "__rl": true,
+          "mode": "id",
+          "value": "rag_collection"
+        },
+        "options": {}
+      },
+      "id": "16261539-5218-4df1-8b14-915dd3377167",
+      "name": "Qdrant Vector Store1",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "position": [
+        2048,
+        592
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "qdrantApi": {
+          "id": "PlvscuggNTqlfg0f",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG Chatbot\n**Chat with your data",
+        "height": 700,
+        "width": 1200,
+        "color": 4
+      },
+      "id": "5919cc58-05f4-42c8-aada-3782a16574d9",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1248,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        528
+      ],
+      "id": "36d43765-ce68-4558-acbd-12d82eb80e5e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "eQ3PrUMWprpVihMu",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        720,
+        560
+      ],
+      "id": "030533ae-ac3a-4018-937c-cfeffffc56bc",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "eQ3PrUMWprpVihMu",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2144,
+        800
+      ],
+      "id": "21800f57-0f40-4e18-b6ab-f1d2a850d4f9",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "eQ3PrUMWprpVihMu",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d8e17e28-e036-43c2-9198-5272369ac069",
+  "meta": {
+    "templateId": "5148",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "615dd306cbc61bf242b7314e35ec79555bbde106325d3ab411747d0c9a1b4f61"
+  },
+  "id": "K0a51dwkePErlijI",
+  "tags": []
+}

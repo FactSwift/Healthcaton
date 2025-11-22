@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot RAG Localhost</title>
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
+        h1 { color: #ea4b71; margin-bottom: 0.5rem; }
+        p { color: #666; margin-bottom: 1.5rem; }
+        .status { font-size: 0.8rem; background: #eef2ff; padding: 5px 10px; border-radius: 4px; color: #4f46e5; display: inline-block;}
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🤖 Chatbot Siap!</h1>
+        <p>Klik tombol bubble di pojok kanan bawah untuk mulai chat dengan dokumen Anda.</p>
+        <div class="status">Connected to: localhost:5678</div>
+    </div>
+
+    <script type="module">
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+        createChat({
+            // URL Webhook yang Anda berikan
+            webhookUrl: 'http://localhost:5678/webhook/5e56a263-3a40-44bd-bc9d-1cfb3bc2a87d/chat',
+            
+            target: '#n8n-chat',
+            mode: 'window', 
+            showWelcomeScreen: true, 
+            initialMessages: [
+                'Halo! Ada yang bisa saya bantu jelaskan dari dokumen Anda?'
+            ],
+            i18n: {
+                en: {
+                    title: 'Asisten AI Lokal',
+                    subtitle: 'Powered by Qdrant & Gemini',
+                    inputPlaceholder: 'Ketik pertanyaan...',
+                },
+            },
+        });
+    </script>
+</body>
+</html>
