@@ -5,14 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Wajah KTP - Deteksi Fraud</title>
     <link rel="stylesheet" href="face-verification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🔐 Verifikasi Identitas KTP</h1>
-            <p class="subtitle">Sistem Deteksi Fraud dengan Face Recognition</p>
-        </header>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div style="flex: 1;"></div>
+            <div style="flex: 1; text-align: center;">
+                <header style="margin: 0; padding: 0;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                        <i class="fas fa-heartbeat" style="font-size: 2.5rem; color: #00824b;"></i>
+                        <div style="text-align: left;">
+                            <div style="font-size: 1.2rem; font-weight: 700; color: #00824b;">BPJS Kesehatan</div>
+                            <div style="font-size: 0.75rem; color: #6b7280;">Badan Penyelenggara Jaminan Sosial</div>
+                        </div>
+                    </div>
+                    <h1>Verifikasi Identitas KTP</h1>
+                    <p class="subtitle">Sistem Deteksi Fraud dengan Face Recognition</p>
+                </header>
+            </div>
+            <div style="flex: 1; text-align: right;">
+                <a href="sivera-home.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #e5e7eb; color: #1f2937; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; transition: all 0.2s;">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </a>
+            </div>
+        </div>
 
         <div class="verification-steps">
             <div class="step" id="step-indicator-1">
@@ -225,7 +244,7 @@
 
         <footer>
             <p>🔒 Privasi Terjamin - Semua proses dilakukan di browser Anda</p>
-            <p class="tech-info">Powered by Face-API.js & TensorFlow.js</p>
+            <p class="tech-info">Powered by DeepFace & FastAPI</p>
         </footer>
     </div>
 

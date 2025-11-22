@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIVERA - Sistem Verifikasi BPJS Kesehatan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f3f8;
+        }
+
+        .top-header {
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+            z-index: 20;
+        }
+
+        .dropdown-id {
+            background-color: #07408d;
+        }
+        
+        .sidebar-item.active {
+            background-color: #f0f3f8;
+            border-right: 4px solid #07408d;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .sidebar-item:not(.active) {
+            border-right: 4px solid transparent;
+        }
+
+        .sivera-gradient-text {
+            background-image: linear-gradient(144deg, #07408d 0%, #699d62 44%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link.active {
+            font-weight: 700;
+            color: #07408d;
+        }
+
+        /* Custom Chat Styles */
+        .chat-messages {
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .message-assistant {
+            background: linear-gradient(135deg, #699d62 0%, #5a8a53 100%);
+            color: white;
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 18px;
+            max-width: 70%;
+            margin-right: auto;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        .message-assistant p {
+            margin-bottom: 8px;
+        }
+
+        .message-assistant p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-assistant strong {
+            font-weight: 700;
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        .message-assistant ul,
+        .message-assistant ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message-assistant li {
+            margin: 6px 0;
+            line-height: 1.5;
+        }
+
+        .message-assistant ul li {
+            list-style-type: disc;
+        }
+
+        .message-assistant ol li {
+            list-style-type: decimal;
+        }
+
+        .message-assistant code {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .message-assistant h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        .message-user {
+            background: linear-gradient(135deg, #07408d 0%, #0558b8 100%);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            padding: 12px 18px;
+            max-width: 70%;
+            margin-left: auto;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 18px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: #cbd5e0;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#f0f3f8]">
+
+    <!-- Header -->
+    <header class="top-header fixed top-0 left-0 w-full bg-white flex items-center justify-between px-10 h-[64px]">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-heartbeat text-3xl text-green-700"></i>
+            <div class="flex flex-col text-sm leading-tight">
+                <span class="font-bold text-lg text-green-700">BPJS Kesehatan</span>
+                <span class="text-xs text-gray-500">Badan Penyelenggara Jaminan Sosial</span>
+            </div>
+        </div>
+
+        <nav class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+            <a href="#" class="nav-link hover:text-blue-600">Profil</a>
+            <a href="#" class="nav-link hover:text-blue-600">Jaminan Kesehatan</a>
+            <a href="#" class="nav-link active">Layanan</a>
+            <a href="#" class="nav-link hover:text-blue-600">Informasi Publik</a>
+            <a href="#" class="nav-link hover:text-blue-600">Berita</a>
+            <a href="#" class="nav-link hover:text-blue-600">Kontak</a>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    placeholder="Cari"
+                    class="pl-4 pr-10 py-2 w-24 rounded-md border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm"
+                />
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="dropdown-id w-10 h-10 rounded-md flex items-center justify-center cursor-pointer">
+                <span class="text-white text-base font-normal">ID</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex pt-[64px] min-h-screen bg-white shadow-xl max-w-7xl mx-auto border-x border-gray-200">
+        
+        <!-- Sidebar -->
+        <aside class="w-[280px] p-6 bg-gray-50 border-r border-gray-200">
+            <div class="text-3xl font-extrabold text-gray-900 mt-4 mb-8">
+                Data Peserta
+            </div>
+
+            <div class="space-y-3">
+                <a href="#" class="sidebar-item active flex items-center justify-between p-3 rounded-md transition duration-150" onclick="showSection('verifikasi')">
+                    <span class="text-base">Verifikasi</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-700"></i>
+                </a>
+
+                <a href="#" class="sidebar-item flex items-center justify-between p-3 rounded-md text-gray-700 hover:bg-gray-100 transition duration-150" onclick="showSection('chatbot')">
+                    <span class="text-base">Sivera Chatbot</span>
+                    <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content -->
+        <main class="flex-1 p-10 bg-white">
+            
+            <!-- Verifikasi Section -->
+            <div id="verifikasi-section" class="content-section">
+                <p class="text-sm text-gray-500 mb-8">
+                    Beranda/Layanan/<span class="font-medium">Verifikasi</span>
+                </p>
+
+                <h2 class="text-xl font-extrabold text-[#003882] mb-6">
+                    Verifikasi <span class="text-gray-900">DATA CUSTOMER BPJS KESEHATAN</span>
+                </h2>
+
+                <!-- SIVERA Description -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8">
+                    <h3 class="sivera-gradient-text text-2xl font-black mb-3">SIVERA</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        SIVERA berfungsi sebagai sistem verifikasi data secara real-time untuk memastikan 100% identitas peserta saat mereka menghubungi CS secara online. Ini penting agar data kesehatan dan kepesertaan yang bersifat pribadi tidak disalahgunakan, sekaligus mempercepat proses layanan.
+                    </p>
+                    
+                    <h4 class="text-md font-semibold text-gray-700 mb-2">Tahap penggunaan fitur :</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-600 text-sm pl-4">
+                        <li>
+                            <span class="font-bold">Unggah KTP</span>
+                            <p class="text-xs ml-4 text-gray-500">CS mengunggah KTP dari customer yang dilayani</p>
+                        </li>
+                        <li>
+                            <span class="font-bold">Capture Selfie</span>
+                            <p class="text-xs ml-4 text-gray-500">CS mengambil foto selfie peserta melalui kamera untuk dibandingkan dengan KTP</p>
+                        </li>
+                        <li>
+                            <span class="font-bold">Verifikasi Wajah (AI-Powered)</span>
+                            <p class="text-xs ml-4 text-gray-500">Sistem DeepFace akan memverifikasi kesesuaian wajah antara KTP dan selfie</p>
+                        </li>
+                        <li>
+                            <span class="font-bold">Bantuan Sivera Chatbot</span>
+                            <p class="text-xs ml-4 text-gray-500">Dapatkan bantuan instant melalui chatbot AI untuk pertanyaan terkait kepesertaan</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="face-verification.html" class="bg-[#07408d] hover:bg-[#003882] text-white font-semibold py-4 px-8 rounded-lg shadow-md text-center transition duration-150 flex items-center justify-center">
+                        <i class="fas fa-user-check mr-2"></i>
+                        Mulai Verifikasi Wajah
+                    </a>
+                    
+                    <button onclick="showSection('chatbot')" class="bg-[#699d62] hover:bg-[#5a8a53] text-white font-semibold py-4 px-8 rounded-lg shadow-md text-center transition duration-150 flex items-center justify-center">
+                        <i class="fas fa-comments mr-2"></i>
+                        Buka Sivera Chatbot
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chatbot Section -->
+            <div id="chatbot-section" class="content-section hidden">
+                <p class="text-sm text-gray-500 mb-8">
+                    Beranda/Layanan/<span class="font-medium">Sivera Chatbot</span>
+                </p>
+
+                <div class="flex flex-col items-center justify-center" style="min-height: 650px;">
+                    
+                    <!-- Avatar SIVERA -->
+                    <div class="mb-3">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                            <i class="fas fa-robot text-3xl text-gray-600"></i> 
+                        </div>
+                    </div>
+
+                    <!-- Teks SIVERA dengan Gradasi -->
+                    <h1 class="sivera-gradient-text text-6xl font-black text-center mb-8">
+                        SIVERA
+                    </h1>
+
+                    <!-- Chat Container -->
+                    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col" style="height: 500px;">
+                        
+                        <!-- Chat Messages Area -->
+                        <div id="chat-messages" class="chat-messages flex-1 p-6 space-y-4">
+                            <!-- Welcome Message -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-robot text-white text-sm"></i>
+                                </div>
+                                <div class="message-assistant">
+                                    <p class="text-sm">Halo! Saya SIVERA, asisten virtual BPJS Kesehatan. Ada yang bisa saya bantu?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Area -->
+                        <div class="border-t border-gray-200 p-4 bg-gray-50">
+                            <div class="flex items-center gap-3 bg-white rounded-full border border-gray-300 shadow-md px-4 py-2">
+                                <!-- Add Button -->
+                                <button class="text-gray-400 hover:text-green-600 transition-colors p-2">
+                                    <i class="fas fa-plus text-lg"></i>
+                                </button>
+
+                                <!-- Input Field -->
+                                <input
+                                    id="chat-input"
+                                    type="text"
+                                    class="flex-1 text-base font-medium placeholder-gray-400 focus:outline-none py-2"
+                                    placeholder="Bertanya ke SIVERA..."
+                                    aria-label="Chat input"
+                                />
+
+                                <!-- Camera Button -->
+                                <button class="text-gray-400 hover:text-blue-500 transition-colors p-2">
+                                    <i class="fas fa-camera text-lg"></i>
+                                </button>
+
+                                <!-- Send/Mic Button -->
+                                <button id="send-button" class="text-green-700 hover:text-green-600 transition-colors p-2">
+                                    <i class="fas fa-microphone text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Custom Chat Script -->
+    <script>
+        const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook/5e56a263-3a40-44bd-bc9d-1cfb3bc2a87d/chat';
+        let sessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substring(7);
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Format markdown-like text to HTML
+        function formatMessage(text) {
+            if (!text) return '';
+            
+            // Escape HTML first
+            let formatted = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            // Convert markdown headings (### Title)
+            formatted = formatted.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            
+            // Convert bold (**text** or __text__)
+            formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/__(.+?)__/g, '<strong>$1</strong>');
+            
+            // Convert italic (*text* or _text_)
+            formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            formatted = formatted.replace(/_(.+?)_/g, '<em>$1</em>');
+            
+            // Convert code (`code`)
+            formatted = formatted.replace(/`(.+?)`/g, '<code>$1</code>');
+            
+            // Split into paragraphs
+            const paragraphs = formatted.split('\n\n');
+            let result = '';
+            
+            for (let para of paragraphs) {
+                para = para.trim();
+                if (!para) continue;
+                
+                // Check if it's a numbered list
+                if (/^\d+\./.test(para)) {
+                    const items = para.split(/\n(?=\d+\.)/);
+                    result += '<ol>';
+                    items.forEach(item => {
+                        // Remove number prefix and clean
+                        const content = item.replace(/^\d+\.\s*/, '').trim();
+                        if (content) {
+                            // Handle nested bullets (* or -)
+                            const lines = content.split('\n');
+                            let itemHtml = lines[0];
+                            if (lines.length > 1) {
+                                const nestedItems = lines.slice(1).filter(l => l.trim().match(/^[\*\-]/));
+                                if (nestedItems.length > 0) {
+                                    itemHtml += '<ul>';
+                                    nestedItems.forEach(nested => {
+                                        const nestedContent = nested.replace(/^[\*\-]\s*/, '').trim();
+                                        if (nestedContent) {
+                                            itemHtml += `<li>${nestedContent}</li>`;
+                                        }
+                                    });
+                                    itemHtml += '</ul>';
+                                }
+                            }
+                            result += `<li>${itemHtml}</li>`;
+                        }
+                    });
+                    result += '</ol>';
+                }
+                // Check if it's a bullet list
+                else if (/^[\*\-]/.test(para)) {
+                    const items = para.split(/\n(?=[\*\-])/);
+                    result += '<ul>';
+                    items.forEach(item => {
+                        const content = item.replace(/^[\*\-]\s*/, '').trim();
+                        if (content) {
+                            result += `<li>${content}</li>`;
+                        }
+                    });
+                    result += '</ul>';
+                }
+                // Regular paragraph or heading
+                else {
+                    // Convert single line breaks to <br>
+                    const withBreaks = para.replace(/\n/g, '<br>');
+                    result += `<p>${withBreaks}</p>`;
+                }
+            }
+            
+            return result || formatted;
+        }
+
+        // Add message to chat
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start gap-3';
+            
+            if (isUser) {
+                messageDiv.classList.add('justify-end');
+                messageDiv.innerHTML = `
+                    <div class="message-user">
+                        <p class="text-sm">${escapeHtml(message)}</p>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                `;
+            } else {
+                const formattedMessage = formatMessage(message);
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="message-assistant">
+                        <div class="text-sm">${formattedMessage}</div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex items-start gap-3';
+            typingDiv.innerHTML = `
+                <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="message-assistant">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingDiv = document.getElementById('typing-indicator');
+            if (typingDiv) {
+                typingDiv.remove();
+            }
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Send message to n8n
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, true);
+            chatInput.value = '';
+
+            // Change button to loading state
+            const icon = sendButton.querySelector('i');
+            icon.className = 'fas fa-spinner fa-spin text-lg';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'sendMessage',
+                        sessionId: sessionId,
+                        chatInput: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+
+                // Add assistant response
+                const assistantMessage = data.output || data.response || data.message || 'Maaf, saya tidak dapat memproses permintaan Anda saat ini.';
+                addMessage(assistantMessage, false);
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addMessage('Maaf, terjadi kesalahan. Pastikan n8n server berjalan di http://localhost:5678', false);
+            } finally {
+                // Reset button
+                icon.className = 'fas fa-microphone text-lg';
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Focus input when section is shown
+        document.addEventListener('chatbot-shown', () => {
+            setTimeout(() => chatInput.focus(), 200);
+        });
+    </script>
+
+    <script>
+        function showSection(section) {
+            event.preventDefault();
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Remove active from all sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-gray-700', 'hover:bg-gray-100');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Add active to clicked sidebar item
+            document.querySelector(`a[onclick="showSection('${section}')"]`).classList.add('active');
+            document.querySelector(`a[onclick="showSection('${section}')"]`).classList.remove('text-gray-700', 'hover:bg-gray-100');
+            
+            // Trigger chat initialization when chatbot section is shown
+            if (section === 'chatbot') {
+                setTimeout(() => {
+                    const event = new CustomEvent('chatbot-shown');
+                    document.dispatchEvent(event);
+                }, 100);
+            }
+        }
+    </script>
+
+</body>
+</html>
